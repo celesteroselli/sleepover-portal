@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  hcSub     String   @unique
+  name      String?
+  email     String?
+  slackId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos MemoryPhoto[]
+}
+
+model MemoryPhoto {
+  id        String   @id @default(cuid())
+  publicPath String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
