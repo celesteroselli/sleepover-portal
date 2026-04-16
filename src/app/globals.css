@@ -24,3 +24,137 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes home-logo-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes home-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+.home-logo-float {
+  animation: home-logo-float 5s ease-in-out infinite;
+}
+
+.home-night {
+  background: linear-gradient(
+    180deg,
+    rgb(31 97 224) 0%,
+    rgb(17 54 156) 28%,
+    rgb(12 34 110) 70%,
+    rgb(8 20 66) 100%
+  );
+}
+
+.home-star {
+  position: absolute;
+  background: #f2ffb2;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  box-shadow: 0 0 10px rgba(242, 255, 178, 0.95);
+  animation-name: home-star-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.home-nav-star {
+  width: 180px;
+  height: 180px;
+  position: relative;
+  display: block;
+  background: #f2ffb2;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  box-shadow: 0 0 20px rgba(242, 255, 178, 0.85);
+}
+
+.home-nav-moon {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: block;
+  border-radius: 9999px;
+  background: #f2ffb2;
+}
+
+.home-nav-moon::after {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 68px;
+  width: 160px;
+  height: 160px;
+  border-radius: 9999px;
+  background: rgb(13 37 117);
+}
+
+.home-nav-ring {
+  position: absolute;
+  inset: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  fill: #f2ffb2;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.home-nav-ring text {
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+.home-nav-ring textPath {
+  fill: #f2ffb2;
+}
+
+.home-nav-moon .home-nav-ring {
+  inset: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 20px);
+  font-size: 13px;
+}
+
+.home-nav-moon-text {
+  position: relative;
+  z-index: 1;
+  max-width: 84px;
+  line-height: 1.1;
+}
