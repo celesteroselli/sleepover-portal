@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
+import ParallaxBackground from "@/components/ParallaxBackground";
 
 export default async function HomePage() {
   const session = await getSession();
@@ -25,27 +26,40 @@ export default async function HomePage() {
     { left: "76%", top: "52%", size: 3, delay: "1.2s", duration: "2.1s" },
     { left: "85%", top: "63%", size: 4, delay: "0.9s", duration: "2.6s" },
     { left: "93%", top: "48%", size: 3, delay: "1.4s", duration: "2.4s" },
+    { left: "14%", top: "72%", size: 4, delay: "0.4s", duration: "2.9s" },
+    { left: "28%", top: "68%", size: 3, delay: "1.7s", duration: "2.3s" },
+    { left: "35%", top: "78%", size: 5, delay: "0.2s", duration: "3.2s" },
+    { left: "45%", top: "71%", size: 3, delay: "1.2s", duration: "2.5s" },
+    { left: "54%", top: "75%", size: 4, delay: "0.8s", duration: "2.7s" },
+    { left: "63%", top: "69%", size: 3, delay: "1.5s", duration: "2.1s" },
+    { left: "72%", top: "77%", size: 5, delay: "0.5s", duration: "3s" },
+    { left: "81%", top: "73%", size: 4, delay: "1s", duration: "2.6s" },
+    { left: "90%", top: "70%", size: 3, delay: "0.3s", duration: "2.4s" },
+    { left: "10%", top: "84%", size: 3, delay: "1.3s", duration: "2.8s" },
+    { left: "20%", top: "88%", size: 4, delay: "0.6s", duration: "2.2s" },
+    { left: "32%", top: "82%", size: 5, delay: "1.8s", duration: "3.1s" },
+    { left: "42%", top: "86%", size: 3, delay: "0.1s", duration: "2.5s" },
+    { left: "51%", top: "90%", size: 4, delay: "1.4s", duration: "2.7s" },
+    { left: "61%", top: "85%", size: 3, delay: "0.9s", duration: "2.3s" },
+    { left: "70%", top: "89%", size: 5, delay: "1.6s", duration: "3s" },
+    { left: "78%", top: "83%", size: 4, delay: "0.7s", duration: "2.6s" },
+    { left: "87%", top: "87%", size: 3, delay: "1.1s", duration: "2.4s" },
+    { left: "95%", top: "91%", size: 4, delay: "0.4s", duration: "2.9s" },
   ];
 
   return (
     <div className="relative left-1/2 w-screen -translate-x-1/2 -mb-8">
-      <div className="relative h-[92vh] -mt-[20vh] min-h-[700px] w-full">
-        <Image
-          src="/sky.png"
-          alt="Sky background"
-          fill
-          priority
-          className="object-cover object-top"
-        />
+      <div className="relative h-[92vh] -mt-[31vh] min-h-[700px] w-full overflow-hidden">
+        <ParallaxBackground />
       </div>
 
-      <div className="relative z-10 -mt-[25vh] h-[50vh] min-h-[650px] w-full sm:h-[32vh]">
+      <div className="relative z-10 -mt-[28vh] h-[50vh] min-h-[650px] w-full sm:h-[32vh]">
         <Image
           src="/clouds.png"
           alt="Clouds"
           fill
           priority
-          className="object-cover object-center"
+          className="object-cover object-center white-edge"
         />
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <Image
@@ -54,12 +68,12 @@ export default async function HomePage() {
             width={700}
             height={700}
             priority
-            className="home-logo-float h-auto w-[500px] sm:w-[500px] md:w-[700px]"
+            className="home-logo-float h-auto w-[500px] sm:w-[500px] md:w-[820px]"
           />
         </div>
       </div>
 
-      <div className="home-night relative -mt-53 min-h-[120vh] w-full px-6 pb-20 pt-28">
+      <div className="home-night relative -mt-58 min-h-[120vh] w-full px-6 pb-20 pt-28">
         {stars.map((star, i) => (
           <span
             key={`star-${i}`}
@@ -75,13 +89,13 @@ export default async function HomePage() {
           />
         ))}
 
-        <div className="relative z-10 mt-53 mx-auto max-w-3xl space-y-3 text-center text-white/95">
-          <h1 className="text-3xl font-semibold">Welcome {session?.name??"Unknown"}!</h1>
+        <div className="relative z-10 mt-49 mx-auto max-w-3xl space-y-3 text-center text-white/95">
+          <h1 className="text-6xl font-bold text-[#9cc5f6] text-border tommy-font">Welcome {session?.name??"Unknown"}! </h1>
         </div>
 
-        <div className="flex justify-center">
+        <div id="home-bottom" className="flex justify-center mt-10">
 
-        <div className="relative z-10 me-40">
+        <div className="relative z-10 me-40 icon" style={{ animation: "home-logo-float 5s ease-in-out infinite", animationDelay: "0.5s" }}>
           <Link
           href="/faq"
           >
@@ -94,7 +108,7 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="relative z-10 mt-30 me-15">
+        <div className="relative z-10 mt-45 me-15 icon" style={{ animation: "home-logo-float 4s ease-in-out infinite", animationDelay: "0.1s" }}>
           <Link
           href="/memories"
           >
@@ -107,7 +121,7 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="relative z-10 mb-5 ms-20">
+        <div className="relative z-10 mb-5 ms-20 icon" style={{ animation: "home-logo-float 6s ease-in-out infinite", animationDelay: "0s" }}>
           <Link
           href="/schedule"
           >
@@ -120,15 +134,15 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="relative z-10 mt-50">
+        <div className="relative z-10 mt-40 me-10 icon" style={{ animation: "home-logo-float 3.5s ease-in-out infinite", animationDelay: "0.2s" }}>
           <Link
           href="/ticket"
           >
           <Image 
           src="/moon.png"
           alt="ticketmoon"
-          width={300}
-          height={300}
+          width={400}
+          height={400}
           />
           </Link>
         </div>

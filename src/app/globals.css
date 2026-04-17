@@ -22,7 +22,27 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Midnight Constellations", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@font-face {
+  font-family: "Midnight Constellations";
+  src: url("/fonts/Midnightconstellations-YLgo.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Tommy";
+  src: url("/fonts/Tommy.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @keyframes home-logo-float {
@@ -54,10 +74,10 @@ body {
 .home-night {
   background: linear-gradient(
     180deg,
-    rgb(31 97 224) 0%,
-    rgb(17 54 156) 28%,
-    rgb(12 34 110) 70%,
-    rgb(8 20 66) 100%
+    #2c5c8b 0%,
+    #23496f 28%,
+    #173048 70%,
+    #0e2031 100%
   );
 }
 
@@ -157,4 +177,121 @@ body {
   z-index: 1;
   max-width: 84px;
   line-height: 1.1;
+}
+
+@keyframes space-header-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+}
+
+.space-header {
+  background: #23496f;
+}
+
+.space-page-shell {
+  background: #23496f;
+}
+
+.space-header-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #f2ffb2;
+  font-family: "Midnight Constellations", "Times New Roman", serif;
+  letter-spacing: 2px;
+  font-size: clamp(2.2rem, 5.6vw, 4.25rem);
+  text-transform: uppercase;
+}
+
+.space-header-back {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  border-left: 7px solid #f2ffb2;
+  border-bottom: 7px solid #f2ffb2;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.space-header-star {
+  position: absolute;
+  background: #f2ffb2;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  animation: space-header-star-twinkle ease-in-out infinite;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-fade {
+  animation: page-fade-in 600ms ease-out;
+}
+
+.text-border {
+  color: #9cc5f6;
+  letter-spacing: 4px;
+  -webkit-text-stroke: 4px white; /* Stroke width and color */
+  paint-order: stroke fill; /* Renders stroke behind the fill */
+
+}
+
+.white-edge {
+  filter: drop-shadow(6px 6px 0 white) 
+        drop-shadow(-6px 6px 0 white) 
+        drop-shadow(6px -6px 0 white) 
+        drop-shadow(-6px -6px 0 white);
+}
+
+.icon {
+  transition: transform 0.3s ease;
+  filter: drop-shadow(1px 1px 4px #F2FFB2);
+}
+
+.icon:hover {
+  transform: scale(1.1);
+}
+
+.parallax-transform {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-image: url("/sky2.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 0;
+}
+
+.tommy-font {
+  font-family: "Tommy", sans-serif;
 }
