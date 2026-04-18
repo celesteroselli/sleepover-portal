@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
 import ParallaxBackground from "@/components/ParallaxBackground";
+import { HomeAsteroid } from "@/components/HomeAsteroid";
 
 export default async function HomePage() {
   const session = await getSession();
@@ -51,6 +52,9 @@ export default async function HomePage() {
     <div className="relative left-1/2 w-screen -translate-x-1/2 -mb-8">
       <div className="relative h-[92vh] -mt-[31vh] min-h-[700px] w-full overflow-hidden">
         <ParallaxBackground />
+        <HomeAsteroid
+          src={process.env.NEXT_PUBLIC_HOME_ASTEROID_URL}
+        />
       </div>
 
       <div className="relative z-10 -mt-[28vh] h-[50vh] min-h-[650px] w-full sm:h-[32vh]">

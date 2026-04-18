@@ -39,6 +39,11 @@ export function MemoriesClient() {
     void load();
   }, [load]);
 
+  const rows: Photo[][] = [];
+  for (let i = 0; i < photos.length; i += 3) {
+    rows.push(photos.slice(i, i + 3));
+  }
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setUploading(true);
@@ -58,11 +63,11 @@ export function MemoriesClient() {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="rounded border border-zinc-200 bg-zinc-50 p-4">
-        <h2 className="mb-3 text-lg font-medium text-zinc-900">Add a photo</h2>
-        <form onSubmit={onSubmit} className="flex max-w-md flex-col gap-3">
-          <label className="text-sm text-zinc-700">
+    <div className="w-full space-y-8">
+      <section className="mx-auto max-w-xl rounded-xl border border-[#f2ffb2]/40 bg-[#132943]/85 p-5 text-[#f2ffb2]">
+        <h2 className="mb-3 text-center text-xl font-semibold">Add a photo</h2>
+        <form onSubmit={onSubmit} className="flex flex-col gap-3">
+          <label className="text-sm">
             Photo (JPEG, PNG, GIF, WebP)
             <input
               type="file"
@@ -72,50 +77,96 @@ export function MemoriesClient() {
               className="mt-1 block w-full text-sm"
             />
           </label>
-          <label className="text-sm text-zinc-700">
+          <label className="text-sm">
             Caption (optional)
             <input
               type="text"
               name="caption"
-              className="mt-1 block w-full rounded border border-zinc-300 px-2 py-1 text-sm"
+              className="mt-1 block w-full rounded border border-[#f2ffb2]/50 bg-white/95 px-2 py-1 text-sm text-zinc-900"
             />
           </label>
           <button
             type="submit"
             disabled={uploading}
-            className="w-fit rounded bg-zinc-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+            className="mx-auto w-fit rounded bg-[#f2ffb2] px-4 py-1.5 text-sm font-semibold text-[#173048] disabled:opacity-50"
           >
-            {uploading ? "Uploading…" : "Upload"}
+            {uploading ? "Uploading..." : "Hang on the line"}
           </button>
         </form>
       </section>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {loading && <p className="text-sm text-zinc-500">Loading…</p>}
+      {error && <p className="text-center text-sm text-red-300">{error}</p>}
+      {loading && <p className="text-center text-sm text-blue-100">Loading...</p>}
 
       {!loading && photos.length === 0 && (
-        <p className="text-sm text-zinc-500">No photos yet. Add one above.</p>
+        <p className="text-center text-sm text-blue-100">
+          No memories yet. Add one above to start the string.
+        </p>
       )}
 
-      <ul className="grid gap-6 sm:grid-cols-2">
-        {photos.map((p) => (
-          <li key={p.id} className="space-y-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={p.publicPath}
-              alt={p.caption ?? "Memory"}
-              className="max-h-64 w-full rounded border border-zinc-200 object-contain bg-zinc-100"
-            />
-            {p.caption && (
-              <p className="text-sm text-zinc-800">{p.caption}</p>
-            )}
-            <p className="text-xs text-zinc-500">
-              By {p.user.name ?? p.user.email ?? "Unknown"}
-              {p.user.slackId ? ` · ${p.user.slackId}` : ""}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {!loading && photos.length > 0 && (
+        <div className="memory-string-wall">
+          {rows.map((row, rowIndex) => {
+            const leftToRight = rowIndex % 2 === 0;
+            return (
+              <section
+                key={`memory-row-${rowIndex}`}
+                className={`memory-row-block memory-row ${leftToRight ? "memory-row-right" : "memory-row-left"}`}
+              >
+                <svg
+                  className="memory-row-string"
+                  viewBox="0 0 1200 220"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  {leftToRight ? (
+                    <path d="M16 28 Q 380 186 812 124 Q 1034 92 1184 40" />
+                  ) : (
+                    <path d="M16 40 Q 212 92 392 124 Q 824 186 1184 28" />
+                  )}
+                </svg>
+
+                <div className="memory-row-photos">
+                    {row.map((p, photoIndex) => {
+                      const rotation = [-5, 2, -3, 4, -2, 3][(rowIndex * 3 + photoIndex) % 6];
+                      return (
+                        <article
+                          key={p.id}
+                          className="memory-polaroid-card"
+                          style={{ transform: `rotate(${rotation}deg)` }}
+                        >
+                          <span className="memory-clothespin" />
+                          <div className="memory-polaroid-stage">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={p.publicPath}
+                              alt={p.caption ?? "Memory"}
+                              className="memory-photo-image"
+                            />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src="/polaroid-frame.svg"
+                              alt=""
+                              aria-hidden="true"
+                              className="memory-polaroid-overlay"
+                            />
+                          </div>
+                          <p className="memory-meta">
+                            {p.caption ?? "Untitled memory"}
+                            <span>
+                              {p.user.name ?? p.user.email ?? "Unknown"}
+                              {p.user.slackId ? ` · ${p.user.slackId}` : ""}
+                            </span>
+                          </p>
+                        </article>
+                      );
+                    })}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

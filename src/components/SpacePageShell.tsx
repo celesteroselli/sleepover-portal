@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { SpacePageHeader } from "./SpacePageHeader";
 
@@ -11,9 +12,27 @@ function isSpacePage(pathname: string) {
   );
 }
 
+/** Tall / scroll-heavy space routes: start at top of viewport, not vertically centered */
+function isSpacePageTopAligned(pathname: string) {
+  return (
+    pathname === "/memories" ||
+    pathname.startsWith("/memories/") ||
+    pathname === "/schedule" ||
+    pathname.startsWith("/schedule/")
+  );
+}
+
 export function SpacePageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const space = isSpacePage(pathname);
+  const topAligned = isSpacePageTopAligned(pathname);
+
+  useLayoutEffect(() => {
+    if (!topAligned) return;
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname, topAligned]);
 
   if (!space) {
     return (
@@ -28,7 +47,11 @@ export function SpacePageShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="space-page-shell flex min-h-screen w-full flex-col">
       <SpacePageHeader />
-      <div className="flex flex-1 items-center justify-center px-4 pb-10 pt-6">
+      <div
+        className={`flex flex-1 justify-center px-4 pb-10 ${
+          topAligned ? "items-start pt-6" : "items-center"
+        }`}
+      >
         <div className="w-full max-w-3xl">{children}</div>
       </div>
     </div>

@@ -255,6 +255,114 @@ html {
   animation: page-fade-in 600ms ease-out;
 }
 
+.memory-string-wall {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.memory-row-block {
+  position: relative;
+  z-index: 1;
+}
+
+.memory-row {
+  position: relative;
+  padding-top: 1.2rem;
+  z-index: 1;
+}
+
+.memory-row-right {
+  padding-left: 1.2rem;
+  padding-right: 2rem;
+}
+
+.memory-row-left {
+  padding-left: 2rem;
+  padding-right: 1.2rem;
+}
+
+.memory-row-string {
+  width: 100%;
+  height: 72px;
+  display: block;
+}
+
+.memory-row-string path {
+  fill: none;
+  stroke: #e0d6ff;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.memory-row-photos {
+  position: relative;
+  z-index: 2;
+  margin-top: -0.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  justify-content: space-around;
+}
+
+.memory-polaroid-card {
+  position: relative;
+  width: 190px;
+  flex: 0 0 190px;
+}
+
+.memory-clothespin {
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 36px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #c9b79a 0%, #a89372 100%);
+  box-shadow: inset -2px 0 0 rgba(255, 255, 255, 0.35);
+  z-index: 3;
+}
+
+.memory-polaroid-stage {
+  position: relative;
+  width: 190px;
+  height: 235px;
+  overflow: hidden;
+}
+
+.memory-photo-image {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 162px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.memory-polaroid-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.memory-meta {
+  margin-top: 0.2rem;
+  text-align: center;
+  color: #f2ffb2;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.memory-meta span {
+  display: block;
+  color: #c3d6f2;
+  font-size: 0.68rem;
+}
+
 .text-border {
   color: #9cc5f6;
   letter-spacing: 4px;
@@ -292,6 +400,90 @@ html {
   z-index: 0;
 }
 
+.home-asteroid-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: visible;
+}
+
+.home-asteroid-img {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: clamp(96px, 20vw, 220px);
+  height: auto;
+  transform-origin: center center;
+  transform: translate3d(122vw, calc(-50% + 5vh), 0) rotate(-20deg) scale(1.28);
+  opacity: 0;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5));
+  animation: home-asteroid-fly 3.6s cubic-bezier(0.32, 0, 0.24, 1) 0.3s forwards;
+}
+
+/* Enters from the right (flies left), arcs up at mid-flight; larger start + peak; fade only after motion stops.
+   Rotation follows the arc: pitched up → level at peak → pitched down at exit */
+@keyframes home-asteroid-fly {
+  0% {
+    transform: translate3d(122vw, calc(-50% + 6vh), 0) rotate(80deg) scale(1.28);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+    transform: translate3d(108vw, calc(-50% + 5vh), 0) rotate(40deg) scale(1.28);
+  }
+  44% {
+    /* Top of arc — horizontal */
+    transform: translate3d(36vw, calc(-50% - 16vh), 0) rotate(0deg) scale(1.62);
+    opacity: 1;
+  }
+  /* Land off the left; motion done by ~80% */
+  80% {
+    transform: translate3d(-44vw, calc(-50% + 5vh), 0) rotate(-40deg) scale(0.52);
+    opacity: 1;
+  }
+  /* Hold end pose; fade only after movement has stopped */
+  100% {
+    transform: translate3d(-44vw, calc(-50% + 5vh), 0) rotate(-40deg) scale(0.52);
+    opacity: 0;
+  }
+}
+
 .tommy-font {
   font-family: "Tommy", sans-serif;
+}
+
+.schedule-calendar-iframe {
+  height: min(70vh, 640px);
+  min-height: 480px;
+}
+
+.schedule-cloud-panel {
+  position: relative;
+  min-height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-image: url("/purple.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(1px 1px 4px #e7d0ff);
+}
+
+.schedule-cloud-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 22rem;
+  width: 100%;
+  height: 100%;
+  padding: 1rem 1.1rem 1.25rem;
+  border-radius: 10px;
+}
+
+.faq-details[open] .faq-summary {
+  border-bottom-color: transparent;
+}
+
+.faq-summary:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(242, 255, 178, 0.6);
+  border-radius: 8px;
 }
