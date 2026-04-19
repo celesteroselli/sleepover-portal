@@ -363,6 +363,26 @@ html {
   font-size: 0.68rem;
 }
 
+.memory-slack-profile-btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid rgba(195, 214, 242, 0.45);
+  background: rgba(19, 41, 67, 0.9);
+  color: #f2ffb2;
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.memory-slack-profile-btn:hover {
+  background: rgba(26, 58, 92, 0.95);
+  border-color: rgba(242, 255, 178, 0.5);
+}
+
 .text-border {
   color: #9cc5f6;
   letter-spacing: 4px;
@@ -379,12 +399,18 @@ html {
 }
 
 .icon {
-  transition: transform 0.3s ease;
   filter: drop-shadow(1px 1px 4px #F2FFB2);
+  cursor: pointer;
 }
 
-.icon:hover {
-  transform: scale(1.1);
+.icon img {
+  transition: transform 0.3s ease;
+  transform-origin: center center;
+  cursor: pointer;
+}
+
+.icon img:hover {
+  transform: scale(1.3);
 }
 
 .parallax-transform {
@@ -396,9 +422,17 @@ html {
   background-image: url("/sky2.png");
   background-position: center top;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 140%;
   z-index: 0;
 }
+
+@media (min-width: 768px) {
+  .parallax-transform {
+    background-size: cover;
+  }
+}
+
+
 
 .home-asteroid-layer {
   position: absolute;
@@ -469,14 +503,31 @@ html {
   filter: drop-shadow(1px 1px 4px #e7d0ff);
 }
 
+@media (max-width: 767px) {
+  .schedule-cloud-panel {
+    /* Nudge art so the painted cloud lines up with centered copy on narrow screens */
+    background-position: 56% center;
+  }
+}
+
 .schedule-cloud-inner {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   z-index: 1;
+  width: min(22rem, 88%);
   max-width: 22rem;
-  width: 100%;
-  height: 100%;
+  transform: translate(-50%, -50%);
   padding: 1rem 1.1rem 1.25rem;
   border-radius: 10px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .schedule-cloud-inner {
+    /* In the two-column grid, keep overlay sizing without fighting row height */
+    width: min(22rem, 92%);
+  }
 }
 
 .faq-details[open] .faq-summary {
@@ -486,4 +537,9 @@ html {
 .faq-summary:focus-visible {
   box-shadow: inset 0 0 0 2px rgba(242, 255, 178, 0.6);
   border-radius: 8px;
+}
+
+.home {
+  background-image: url("/bg.png");
+  background-size: cover;
 }

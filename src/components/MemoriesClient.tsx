@@ -1,6 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
+
+const MOBILE_MAX = 767;
+
+function hackClubSlackProfileUrl(slackUserId: string) {
+  return `https://hackclub.slack.com/team/${encodeURIComponent(slackUserId)}`;
+}
 
 type PhotoUser = {
   name: string | null;
@@ -21,6 +33,7 @@ export function MemoriesClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [photosPerRow, setPhotosPerRow] = useState(3);
 
   const load = useCallback(async () => {
     setError(null);
@@ -39,10 +52,21 @@ export function MemoriesClient() {
     void load();
   }, [load]);
 
-  const rows: Photo[][] = [];
-  for (let i = 0; i < photos.length; i += 3) {
-    rows.push(photos.slice(i, i + 3));
-  }
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_MAX}px)`);
+    const sync = () => setPhotosPerRow(mq.matches ? 2 : 3);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const rows = useMemo(() => {
+    const out: Photo[][] = [];
+    for (let i = 0; i < photos.length; i += photosPerRow) {
+      out.push(photos.slice(i, i + photosPerRow));
+    }
+    return out;
+  }, [photos, photosPerRow]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -128,7 +152,10 @@ export function MemoriesClient() {
 
                 <div className="memory-row-photos">
                     {row.map((p, photoIndex) => {
-                      const rotation = [-5, 2, -3, 4, -2, 3][(rowIndex * 3 + photoIndex) % 6];
+                      const rotation =
+                        [-5, 2, -3, 4, -2, 3][
+                          (rowIndex * photosPerRow + photoIndex) % 6
+                        ];
                       return (
                         <article
                           key={p.id}
@@ -155,7 +182,16 @@ export function MemoriesClient() {
                             {p.caption ?? "Untitled memory"}
                             <span>
                               {p.user.name ?? p.user.email ?? "Unknown"}
-                              {p.user.slackId ? ` · ${p.user.slackId}` : ""}
+                              {p.user.slackId ? (
+                                <a
+                                  href={hackClubSlackProfileUrl(p.user.slackId)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="memory-slack-profile-btn ms-3"
+                                >
+                                  Slack profile
+                                </a>
+                              ) : null}
                             </span>
                           </p>
                         </article>

@@ -50,14 +50,14 @@ export default async function HomePage() {
 
   return (
     <div className="relative left-1/2 w-screen -translate-x-1/2 -mb-8">
-      <div className="relative h-[92vh] -mt-[31vh] min-h-[700px] w-full overflow-hidden">
+      <div className="relative md:h-[92vh] -mt-[5vh] sm:-mt-[10vh] md:-mt-[31vh] md:min-h-[700px] h-[60vh] min-h-[300px] w-full overflow-hidden">
         <ParallaxBackground />
         <HomeAsteroid
           src={process.env.NEXT_PUBLIC_HOME_ASTEROID_URL}
         />
       </div>
 
-      <div className="relative z-10 -mt-[28vh] h-[50vh] min-h-[650px] w-full sm:h-[32vh]">
+      <div className="relative z-10 -mt-[28vh] h-[8vh] md:h-[50vh] min-h-[350px] md:min-h-[650px] w-full sm:h-[32vh]">
         <Image
           src="/clouds.png"
           alt="Clouds"
@@ -97,56 +97,60 @@ export default async function HomePage() {
           <h1 className="text-6xl font-bold text-[#9cc5f6] text-border tommy-font">Welcome {session?.name??"Unknown"}! </h1>
         </div>
 
-        <div id="home-bottom" className="flex justify-center mt-10">
+        <div id="home-bottom" className="flex flex-wrap justify-center gap-8 mt-10 md:flex-nowrap">
 
-        <div className="relative z-10 me-40 icon" style={{ animation: "home-logo-float 5s ease-in-out infinite", animationDelay: "0.5s" }}>
+        <div className="relative z-10 icon" style={{ animation: "home-logo-float 5s ease-in-out infinite", animationDelay: "0.5s" }}>
           <Link
           href="/faq"
           >
-          <Image 
-          src="/faqstar.png"
-          alt="faqstar"
-          width={300}
-          height={300}
+          <Image
+            src="/faqstar.png"
+            alt="faqstar"
+            width={440}
+            height={440}
+            className="w-[200px] md:w-[300px]"
           />
           </Link>
         </div>
 
-        <div className="relative z-10 mt-45 me-15 icon" style={{ animation: "home-logo-float 4s ease-in-out infinite", animationDelay: "0.1s" }}>
+        <div className="relative z-10 me-10 mt-12 md:mt-45 icon" style={{ animation: "home-logo-float 4s ease-in-out infinite", animationDelay: "0.1s" }}>
           <Link
           href="/memories"
           >
-          <Image 
-          src="/memoriesstar.png"
-          alt="memoriesstar"
-          width={300}
-          height={300}
+          <Image
+            src="/memoriesstar.png"
+            alt="memoriesstar"
+            width={440}
+            height={440}
+            className="w-[200px] md:w-[300px]"
           />
           </Link>
         </div>
 
-        <div className="relative z-10 mb-5 ms-20 icon" style={{ animation: "home-logo-float 6s ease-in-out infinite", animationDelay: "0s" }}>
+        <div className="relative z-10 mb-3 md:mb-5 icon" style={{ animation: "home-logo-float 6s ease-in-out infinite", animationDelay: "0s" }}>
           <Link
           href="/schedule"
           >
-          <Image 
-          src="/schedulestar.png"
-          alt="schedulestar"
-          width={300}
-          height={300}
+          <Image
+            src="/schedulestar.png"
+            alt="schedulestar"
+            width={440}
+            height={440}
+            className="w-[200px] md:w-[300px]"
           />
           </Link>
         </div>
 
-        <div className="relative z-10 mt-40 me-10 icon" style={{ animation: "home-logo-float 3.5s ease-in-out infinite", animationDelay: "0.2s" }}>
+        <div className="relative z-10 mt-10 md:mt-40 icon" style={{ animation: "home-logo-float 3.5s ease-in-out infinite", animationDelay: "0.2s" }}>
           <Link
           href="/ticket"
           >
-          <Image 
-          src="/moon.png"
-          alt="ticketmoon"
-          width={400}
-          height={400}
+          <Image
+            src="/moon.png"
+            alt="ticketmoon"
+            width={480}
+            height={480}
+            className="w-[200px] md:w-[400px]"
           />
           </Link>
         </div>
