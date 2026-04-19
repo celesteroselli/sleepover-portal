@@ -41,12 +41,14 @@ export async function PortalNav() {
           </>
         )}
         <span className="ml-auto">
-          <Link
-            href="/api/auth/logout"
-            className="text-zinc-500 underline-offset-2 hover:underline"
-          >
-            Sign out
-          </Link>
+          <form action="/api/auth/logout" method="post" className="inline">
+            <button
+              type="submit"
+              className="cursor-pointer border-0 bg-transparent p-0 text-sm text-zinc-500 underline-offset-2 hover:underline"
+            >
+              Sign out
+            </button>
+          </form>
         </span>
       </nav>
     </header>

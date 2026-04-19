@@ -1,4 +1,5 @@
 import { getSession } from "@/lib/auth";
+import { safeNextPath } from "@/lib/safe-redirect";
 import { redirect } from "next/navigation";
 
 export default async function LoginPage({
@@ -10,7 +11,8 @@ export default async function LoginPage({
   const params = await searchParams;
 
   if (session) {
-    redirect(params.next && params.next.startsWith("/") ? params.next : "/home");
+    const next = safeNextPath(params.next);
+    redirect(next ?? "/home");
   }
 
   const err = params.error;

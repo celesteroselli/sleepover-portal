@@ -1,20 +1,52 @@
 import { createSessionToken, COOKIE } from "@/lib/auth";
 import { exchangeCodeForTokens, fetchHackClubMe } from "@/lib/hackclub";
+import { OAUTH_STATE_COOKIE } from "@/lib/oauth-csrf";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+
+function clearOAuthStateCookie(res: NextResponse) {
+  res.cookies.set(OAUTH_STATE_COOKIE, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+}
 
 export async function GET(request: NextRequest) {
   const url = request.nextUrl;
   const code = url.searchParams.get("code");
   const oauthError = url.searchParams.get("error");
+  const stateParam = url.searchParams.get("state");
+  const expectedState = request.cookies.get(OAUTH_STATE_COOKIE)?.value;
 
   if (oauthError) {
-    return NextResponse.redirect(
+    const res = NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(oauthError)}`, url.origin)
     );
+    clearOAuthStateCookie(res);
+    return res;
   }
   if (!code) {
-    return NextResponse.redirect(new URL("/login?error=missing_code", url.origin));
+    const res = NextResponse.redirect(
+      new URL("/login?error=missing_code", url.origin)
+    );
+    clearOAuthStateCookie(res);
+    return res;
+  }
+  if (
+    !stateParam ||
+    !expectedState ||
+    stateParam.length > 256 ||
+    expectedState.length > 256 ||
+    stateParam !== expectedState
+  ) {
+    const res = NextResponse.redirect(
+      new URL("/login?error=invalid_state", url.origin)
+    );
+    clearOAuthStateCookie(res);
+    return res;
   }
 
   try {
@@ -29,7 +61,11 @@ export async function GET(request: NextRequest) {
       (typeof me.id === "string" && me.id) ||
       null;
     if (!hcSub) {
-      return NextResponse.redirect(new URL("/login?error=no_subject", url.origin));
+      const res = NextResponse.redirect(
+        new URL("/login?error=no_subject", url.origin)
+      );
+      clearOAuthStateCookie(res);
+      return res;
     }
 
     const slackRaw =
@@ -73,6 +109,7 @@ export async function GET(request: NextRequest) {
     });
 
     const res = NextResponse.redirect(new URL("/home", url.origin));
+    clearOAuthStateCookie(res);
     res.cookies.set(COOKIE, jwt, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -83,6 +120,10 @@ export async function GET(request: NextRequest) {
     return res;
   } catch (e) {
     console.error(e);
-    return NextResponse.redirect(new URL("/login?error=callback_failed", url.origin));
+    const res = NextResponse.redirect(
+      new URL("/login?error=callback_failed", url.origin)
+    );
+    clearOAuthStateCookie(res);
+    return res;
   }
 }

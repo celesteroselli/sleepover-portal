@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth";
+import { getSession, isAdminSlackId } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
@@ -12,12 +12,23 @@ const ALLOWED = new Set([
   "image/webp",
 ]);
 
+/** Hard cap per upload to limit disk exhaustion (MIME is still client-reported). */
+const MAX_UPLOAD_BYTES = 12 * 1024 * 1024;
+
 function extForMime(mime: string) {
   if (mime === "image/png") return "png";
   if (mime === "image/gif") return "gif";
   if (mime === "image/webp") return "webp";
   return "jpg";
 }
+
+/** Fields exposed to any logged-in user (no name, email, Slack, or userId). */
+const memoryPhotoPublicSelect = {
+  id: true,
+  publicPath: true,
+  caption: true,
+  createdAt: true,
+} as const;
 
 export async function GET() {
   const session = await getSession();
@@ -27,9 +38,7 @@ export async function GET() {
 
   const photos = await prisma.memoryPhoto.findMany({
     orderBy: { createdAt: "desc" },
-    include: {
-      user: { select: { id: true, name: true, slackId: true, email: true } },
-    },
+    select: memoryPhotoPublicSelect,
   });
 
   return NextResponse.json({ photos });
@@ -53,6 +62,12 @@ export async function POST(request: NextRequest) {
   }
 
   const buf = Buffer.from(await file.arrayBuffer());
+  if (buf.length > MAX_UPLOAD_BYTES) {
+    return NextResponse.json(
+      { error: "File too large (max 12 MB)." },
+      { status: 413 }
+    );
+  }
   const name = `${randomUUID()}.${extForMime(file.type)}`;
   const publicPath = `/uploads/memories/${name}`;
   const dir = path.join(process.cwd(), "public", "uploads", "memories");
@@ -70,5 +85,16 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return NextResponse.json({ photo });
+  if (isAdminSlackId(session.slackId)) {
+    return NextResponse.json({ photo });
+  }
+
+  return NextResponse.json({
+    photo: {
+      id: photo.id,
+      publicPath: photo.publicPath,
+      caption: photo.caption,
+      createdAt: photo.createdAt,
+    },
+  });
 }

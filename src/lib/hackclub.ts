@@ -62,7 +62,7 @@ export async function fetchHackClubMe(accessToken: string): Promise<HackClubMe> 
   return res.json() as Promise<HackClubMe>;
 }
 
-export function buildAuthorizeUrl() {
+export function buildAuthorizeUrl(state: string) {
   const clientId = process.env.HACK_CLUB_CLIENT_ID!;
   const redirectUri = process.env.HACK_CLUB_REDIRECT_URI!;
   const scope = [
@@ -79,6 +79,7 @@ export function buildAuthorizeUrl() {
     redirect_uri: redirectUri,
     response_type: "code",
     scope,
+    state,
   });
 
   return `${AUTH_BASE}/oauth/authorize?${params.toString()}`;

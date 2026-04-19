@@ -22,13 +22,19 @@ export async function DELETE(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const fsPath = path.join(
+  const rel = photo.publicPath.replace(/^\//, "");
+  const resolved = path.resolve(process.cwd(), "public", rel);
+  const uploadsRoot = path.resolve(
     process.cwd(),
     "public",
-    photo.publicPath.replace(/^\//, "")
+    "uploads",
+    "memories"
   );
+  if (!resolved.startsWith(uploadsRoot + path.sep) && resolved !== uploadsRoot) {
+    return NextResponse.json({ error: "Invalid storage path" }, { status: 400 });
+  }
   try {
-    await unlink(fsPath);
+    await unlink(resolved);
   } catch {
     /* file may already be gone */
   }

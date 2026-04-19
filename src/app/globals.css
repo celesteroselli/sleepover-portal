@@ -357,32 +357,6 @@ html {
   line-height: 1.2;
 }
 
-.memory-meta span {
-  display: block;
-  color: #c3d6f2;
-  font-size: 0.68rem;
-}
-
-.memory-slack-profile-btn {
-  display: inline-block;
-  margin-top: 0.35rem;
-  padding: 0.2rem 0.45rem;
-  border-radius: 4px;
-  border: 1px solid rgba(195, 214, 242, 0.45);
-  background: rgba(19, 41, 67, 0.9);
-  color: #f2ffb2;
-  font-size: 0.62rem;
-  font-weight: 600;
-  line-height: 1.2;
-  text-decoration: none;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.memory-slack-profile-btn:hover {
-  background: rgba(26, 58, 92, 0.95);
-  border-color: rgba(242, 255, 178, 0.5);
-}
-
 .text-border {
   color: #9cc5f6;
   letter-spacing: 4px;

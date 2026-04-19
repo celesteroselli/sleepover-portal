@@ -10,22 +10,11 @@ import {
 
 const MOBILE_MAX = 767;
 
-function hackClubSlackProfileUrl(slackUserId: string) {
-  return `https://hackclub.slack.com/team/${encodeURIComponent(slackUserId)}`;
-}
-
-type PhotoUser = {
-  name: string | null;
-  slackId: string | null;
-  email: string | null;
-};
-
 type Photo = {
   id: string;
   publicPath: string;
   caption: string | null;
   createdAt: string;
-  user: PhotoUser;
 };
 
 export function MemoriesClient() {
@@ -180,19 +169,6 @@ export function MemoriesClient() {
                           </div>
                           <p className="memory-meta">
                             {p.caption ?? "Untitled memory"}
-                            <span>
-                              {p.user.name ?? p.user.email ?? "Unknown"}
-                              {p.user.slackId ? (
-                                <a
-                                  href={hackClubSlackProfileUrl(p.user.slackId)}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="memory-slack-profile-btn ms-3"
-                                >
-                                  Slack profile
-                                </a>
-                              ) : null}
-                            </span>
                           </p>
                         </article>
                       );

@@ -1,7 +1,14 @@
 import { AdminMemoriesPanel } from "@/components/AdminMemoriesPanel";
+import { getSession, isAdminSlackId } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
+  const session = await getSession();
+  if (!session || !isAdminSlackId(session.slackId)) {
+    redirect("/home");
+  }
+
   const [users, photos] = await Promise.all([
     prisma.user.findMany({
       orderBy: { updatedAt: "desc" },
