@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ParallaxBackground from "@/components/ParallaxBackground";
 import { HomeAsteroid } from "@/components/HomeAsteroid";
+import { HomeEventCountdown } from "@/components/HomeEventCountdown";
 
 export default async function HomePage() {
   const session = await getSession();
@@ -93,13 +94,20 @@ export default async function HomePage() {
           />
         ))}
 
-        <div className="relative z-10 mt-49 mx-auto max-w-3xl space-y-3 text-center text-white/95">
-          <h1 className="text-6xl font-bold text-[#9cc5f6] text-border tommy-font">Welcome {session?.name??"Unknown"}! </h1>
+        <div className="relative z-10 mt-49 mx-auto max-w-6xl space-y-3 text-center text-white/95">
+        <div className="flex flex-col items-center gap-3 bg-[#ffe8b2] rounded-lg border border-[#f2ffb2]/40 bg-[#132943]/85 p-5 glow">
+
+          <h2 className="w-border text-4xl font-bold text-[#e6a4ab]">Countdown to Sleepover!</h2>
+          <HomeEventCountdown />
+</div>
+          <h1 className="text-6xl font-bold text-[#9cc5f6] text-border tommy-font pt-12">
+            Welcome {session?.name ?? "Unknown"}!{" "}
+          </h1>
         </div>
 
         <div id="home-bottom" className="flex flex-wrap justify-center gap-8 mt-10 md:flex-nowrap">
 
-        <div className="relative z-10 icon" style={{ animation: "home-logo-float 5s ease-in-out infinite", animationDelay: "0.5s" }}>
+        <div className="relative z-10 icon md:pt-0 pt-20" style={{ animation: "home-logo-float 5s ease-in-out infinite", animationDelay: "0.5s" }}>
           <Link
           href="/faq"
           >
@@ -108,7 +116,7 @@ export default async function HomePage() {
             alt="faqstar"
             width={440}
             height={440}
-            className="w-[200px] md:w-[300px]"
+            className="w-[150px] md:w-[300px]"
           />
           </Link>
         </div>
@@ -122,7 +130,7 @@ export default async function HomePage() {
             alt="memoriesstar"
             width={440}
             height={440}
-            className="w-[200px] md:w-[300px]"
+            className="w-[150px] md:w-[300px]"
           />
           </Link>
         </div>
@@ -136,7 +144,7 @@ export default async function HomePage() {
             alt="schedulestar"
             width={440}
             height={440}
-            className="w-[200px] md:w-[300px]"
+            className="w-[150px] md:w-[300px]"
           />
           </Link>
         </div>

@@ -543,3 +543,13 @@ html {
   background-image: url("/bg.png");
   background-size: cover;
 }
+
+.w-border {
+  letter-spacing: 3px;
+  -webkit-text-stroke: 3px white; /* Stroke width and color */
+  paint-order: stroke fill; /* Renders stroke behind the fill */
+}
+
+.glow {
+  filter: drop-shadow(1px 1px 4px #F2FFB2);
+}
