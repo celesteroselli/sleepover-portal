@@ -1,6 +1,7 @@
 import { createSessionToken, COOKIE } from "@/lib/auth";
 import { exchangeCodeForTokens, fetchHackClubMe } from "@/lib/hackclub";
 import { OAUTH_STATE_COOKIE } from "@/lib/oauth-csrf";
+import { getPublicOriginFromRequest } from "@/lib/public-origin";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -16,6 +17,7 @@ function clearOAuthStateCookie(res: NextResponse) {
 
 export async function GET(request: NextRequest) {
   const url = request.nextUrl;
+  const origin = getPublicOriginFromRequest(request);
   const code = url.searchParams.get("code");
   const oauthError = url.searchParams.get("error");
   const stateParam = url.searchParams.get("state");
@@ -23,14 +25,14 @@ export async function GET(request: NextRequest) {
 
   if (oauthError) {
     const res = NextResponse.redirect(
-      new URL(`/login?error=${encodeURIComponent(oauthError)}`, url.origin)
+      new URL(`/login?error=${encodeURIComponent(oauthError)}`, origin)
     );
     clearOAuthStateCookie(res);
     return res;
   }
   if (!code) {
     const res = NextResponse.redirect(
-      new URL("/login?error=missing_code", url.origin)
+      new URL("/login?error=missing_code", origin)
     );
     clearOAuthStateCookie(res);
     return res;
@@ -43,7 +45,7 @@ export async function GET(request: NextRequest) {
     stateParam !== expectedState
   ) {
     const res = NextResponse.redirect(
-      new URL("/login?error=invalid_state", url.origin)
+      new URL("/login?error=invalid_state", origin)
     );
     clearOAuthStateCookie(res);
     return res;
@@ -62,7 +64,7 @@ export async function GET(request: NextRequest) {
       null;
     if (!hcSub) {
       const res = NextResponse.redirect(
-        new URL("/login?error=no_subject", url.origin)
+        new URL("/login?error=no_subject", origin)
       );
       clearOAuthStateCookie(res);
       return res;
@@ -108,7 +110,7 @@ export async function GET(request: NextRequest) {
       slackId: user.slackId,
     });
 
-    const res = NextResponse.redirect(new URL("/home", url.origin));
+    const res = NextResponse.redirect(new URL("/home", origin));
     clearOAuthStateCookie(res);
     res.cookies.set(COOKIE, jwt, {
       httpOnly: true,
@@ -119,9 +121,10 @@ export async function GET(request: NextRequest) {
     });
     return res;
   } catch (e) {
-    console.error(e);
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("[auth/callback] callback_failed:", message);
     const res = NextResponse.redirect(
-      new URL("/login?error=callback_failed", url.origin)
+      new URL("/login?error=callback_failed", origin)
     );
     clearOAuthStateCookie(res);
     return res;

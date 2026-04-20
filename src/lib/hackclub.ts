@@ -20,10 +20,12 @@ export type HackClubMe = {
 };
 
 export async function exchangeCodeForTokens(code: string) {
+  // Must match the redirect_uri sent to /oauth/authorize and the OAuth app's allowlist.
+  const redirect_uri = process.env.HACK_CLUB_REDIRECT_URI!;
   const body = {
     client_id: process.env.HACK_CLUB_CLIENT_ID!,
     client_secret: process.env.HACK_CLUB_CLIENT_SECRET!,
-    redirect_uri: process.env.HACK_CLUB_REDIRECT_URI!,
+    redirect_uri,
     code,
     grant_type: "authorization_code",
   };
@@ -65,6 +67,7 @@ export async function fetchHackClubMe(accessToken: string): Promise<HackClubMe> 
 export function buildAuthorizeUrl(state: string) {
   const clientId = process.env.HACK_CLUB_CLIENT_ID!;
   const redirectUri = process.env.HACK_CLUB_REDIRECT_URI!;
+  // Same value as token exchange; if prod still has localhost here, OAuth returns to localhost.
   const scope = [
     "openid",
     "profile",

@@ -100,7 +100,8 @@ Created in `src/lib/auth.ts` with `jose` (`SignJWT` / `jwtVerify`).
 |----------|------|
 | `SESSION_SECRET` | JWT signing key |
 | `DATABASE_URL` | SQLite connection string |
-| `HACK_CLUB_CLIENT_ID`, `HACK_CLUB_CLIENT_SECRET`, `HACK_CLUB_REDIRECT_URI` | OAuth client |
+| `HACK_CLUB_CLIENT_ID`, `HACK_CLUB_CLIENT_SECRET`, `HACK_CLUB_REDIRECT_URI` | OAuth client — **`HACK_CLUB_REDIRECT_URI` must exactly match** the callback URL allowed in the Hack Club OAuth app and the URL the browser uses (scheme, host, path, no trailing slash unless registered). If it still says `localhost`, production login will send users to Hack Club with a localhost `redirect_uri`, and after auth the browser hits **localhost**, not your portal. |
+| `PORTAL_PUBLIC_URL` | Optional, e.g. `https://portal.sleepover.hackclub.com` — used for same-origin redirects when `Host` / `nextUrl.origin` are wrong behind a reverse proxy (`X-Forwarded-Host` is also used when `PORTAL_PUBLIC_URL` is unset). |
 | `ADMIN_SLACK_IDS` | Comma-separated Slack user IDs allowed into `/admin` |
 | `NEXT_PUBLIC_HOME_ASTEROID_URL` | Optional public asset URL (no auth) |
 

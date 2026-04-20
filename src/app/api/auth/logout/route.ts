@@ -1,4 +1,5 @@
 import { COOKIE } from "@/lib/auth";
+import { getPublicOriginFromRequest } from "@/lib/public-origin";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -6,7 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
  * while SameSite=Lax cookies are withheld on cross-site POSTs from other sites.
  */
 export async function POST(request: NextRequest) {
-  const res = NextResponse.redirect(new URL("/", request.nextUrl.origin));
+  const origin = getPublicOriginFromRequest(request);
+  const res = NextResponse.redirect(new URL("/", origin));
   res.cookies.set(COOKIE, "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
