@@ -1,16 +1,16 @@
 import { createSessionToken, COOKIE } from "@/lib/auth";
 import { exchangeCodeForTokens, fetchHackClubMe } from "@/lib/hackclub";
-import { OAUTH_STATE_COOKIE } from "@/lib/oauth-csrf";
+import {
+  OAUTH_STATE_COOKIE,
+  oauthStateCookieBaseOptions,
+} from "@/lib/oauth-csrf";
 import { getPublicOriginFromRequest } from "@/lib/public-origin";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 function clearOAuthStateCookie(res: NextResponse) {
   res.cookies.set(OAUTH_STATE_COOKIE, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
+    ...oauthStateCookieBaseOptions(),
     maxAge: 0,
   });
 }
@@ -44,6 +44,10 @@ export async function GET(request: NextRequest) {
     expectedState.length > 256 ||
     stateParam !== expectedState
   ) {
+    console.warn("[auth/callback] invalid_state", {
+      hasStateQuery: Boolean(stateParam),
+      hasStateCookie: Boolean(expectedState),
+    });
     const res = NextResponse.redirect(
       new URL("/login?error=invalid_state", origin)
     );

@@ -23,7 +23,7 @@ It is not a legal privacy policy; use it as engineering reference and for threat
 
 ### 2.1 Hack Club OAuth
 
-- **Authorize**: `GET /api/auth/login` generates a random `state` (32 random bytes, base64url), stores it in HttpOnly cookie `hc_oauth_state`, redirects to `https://auth.hackclub.com/oauth/authorize` with `client_id`, `redirect_uri`, `response_type=code`, `scope`, and `state`.
+- **Authorize**: `GET /api/auth/login` generates a random `state` (32 random bytes, base64url), stores it in HttpOnly cookie `hc_oauth_state` (`SameSite=None; Secure` when `NODE_ENV=production` so the cookie is still sent after the cross-site round trip from [auth.hackclub.com](https://auth.hackclub.com); `SameSite=Lax` on localhost), sets `Cache-Control: no-store` on the redirect, then redirects to `https://auth.hackclub.com/oauth/authorize` with `client_id`, `redirect_uri`, `response_type=code`, `scope`, and `state`.
 - **Callback**: `GET /api/auth/callback` validates `state` matches `hc_oauth_state`, then exchanges `code` for tokens server-side (`HACK_CLUB_CLIENT_ID`, `HACK_CLUB_CLIENT_SECRET`, `HACK_CLUB_REDIRECT_URI`). It never exposes the refresh/access token to the browser.
 - **Userinfo**: Server calls `https://auth.hackclub.com/api/v1/me` with the access token, then **upserts** a `User` row in SQLite.
 
@@ -209,7 +209,7 @@ Anything under `public/` is **world-readable** without a session if the URL is k
 
 ## 7. Change log (security-related edits)
 
-- OAuth **`state`** + HttpOnly cookie; validated on callback.
+- OAuth **`state`** + HttpOnly cookie; validated on callback; production uses **`SameSite=None; Secure`** for `hc_oauth_state` so `invalid_state` does not occur after the IdP redirect; login redirect is **`no-store`** so a CDN cannot cache a 302 without `Set-Cookie`.
 - **`safeNextPath`** for post-login `next` parameter.
 - Memory upload **12 MB** cap; delete path **confined** to `uploads/memories/`.
 - **Admin page** server-side `isAdminSlackId` check in addition to middleware.
