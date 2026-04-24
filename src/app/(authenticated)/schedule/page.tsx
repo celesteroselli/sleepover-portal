@@ -35,11 +35,10 @@ export default function SchedulePage() {
           <div className="schedule-cloud-inner flex flex-col items-center justify-center">
             <div className="w-full space-y-2 text-center p-5">
               <h2 className="text-lg font-semibold text-[#173048]">
-                Workshop track A
+                Keychain/Friendship Bracelet Workshops
               </h2>
               <p className="text-sm leading-relaxed text-[#173048]/95">
-                Room and time TBD. Short blurb about what participants will build
-                or learn in this session.
+                <strong>11am Sat</strong> and <strong>6pm Sat</strong> (respectively) - come, bond, and have fun!
               </p>
             </div>
           </div>
@@ -48,10 +47,10 @@ export default function SchedulePage() {
           <div className="schedule-cloud-inner flex flex-col items-center justify-center">
             <div className="w-full space-y-2 text-center p-5">
               <h2 className="text-lg font-semibold text-[#173048]">
-                Workshop track B
+                Lightning Talks
               </h2>
               <p className="text-sm leading-relaxed text-[#173048]/95">
-                Room and time TBD. Short blurb about the second workshop offering.
+                <strong>8pm Sat</strong> during dinner. Learn or share something you love!
               </p>
             </div>
           </div>

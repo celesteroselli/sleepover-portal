@@ -1,3 +1,5 @@
+import { logOAuthTrace, logOAuthError } from "@/lib/auth-oauth-debug";
+
 const AUTH_BASE = "https://auth.hackclub.com";
 
 export type HackClubMe = {
@@ -22,8 +24,19 @@ export type HackClubMe = {
 export async function exchangeCodeForTokens(code: string) {
   // Must match the redirect_uri sent to /oauth/authorize and the OAuth app's allowlist.
   const redirect_uri = process.env.HACK_CLUB_REDIRECT_URI!;
+  const client_id = process.env.HACK_CLUB_CLIENT_ID!;
+
+  logOAuthTrace("token:request", {
+    url: `${AUTH_BASE}/oauth/token`,
+    redirect_uri,
+    client_id_prefix: client_id ? `${client_id.slice(0, 10)}…` : "(missing)",
+    client_id_length: client_id?.length ?? 0,
+    client_secret_set: Boolean(process.env.HACK_CLUB_CLIENT_SECRET),
+    code_length: code.length,
+  });
+
   const body = {
-    client_id: process.env.HACK_CLUB_CLIENT_ID!,
+    client_id,
     client_secret: process.env.HACK_CLUB_CLIENT_SECRET!,
     redirect_uri,
     code,
@@ -38,6 +51,10 @@ export async function exchangeCodeForTokens(code: string) {
 
   if (!res.ok) {
     const text = await res.text();
+    logOAuthError("token:response_error", {
+      httpStatus: res.status,
+      responseBody: text.length > 2000 ? `${text.slice(0, 2000)}…` : text,
+    });
     throw new Error(`Token exchange failed: ${res.status} ${text}`);
   }
 
@@ -58,6 +75,10 @@ export async function fetchHackClubMe(accessToken: string): Promise<HackClubMe> 
 
   if (!res.ok) {
     const text = await res.text();
+    logOAuthError("me:response_error", {
+      httpStatus: res.status,
+      responseBody: text.length > 1500 ? `${text.slice(0, 1500)}…` : text,
+    });
     throw new Error(`Hack Club /me failed: ${res.status} ${text}`);
   }
 

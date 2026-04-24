@@ -22,15 +22,17 @@ function two(n: number) {
 }
 
 export function HomeEventCountdown() {
-  const [, setTick] = useState(0);
+  const [nowMs, setNowMs] = useState<number | null>(null);
 
   useEffect(() => {
-    const id = window.setInterval(() => setTick((t) => t + 1), 1000);
+    setNowMs(Date.now());
+    const id = window.setInterval(() => setNowMs(Date.now()), 1000);
     return () => window.clearInterval(id);
   }, []);
 
+  const hasMounted = nowMs !== null;
   const { days, hours, minutes, seconds, ended } = splitRemaining(
-    TARGET_MS - Date.now(),
+    TARGET_MS - (nowMs ?? TARGET_MS),
   );
 
   return (
@@ -39,7 +41,9 @@ export function HomeEventCountdown() {
         className="text-3xl font-bold tracking-wide text-[#9cc5f6] text-border tommy-font sm:text-4xl md:text-5xl break-words"
         aria-live="polite"
       >
-        {ended ? (
+        {!hasMounted ? (
+          <span className="tabular-nums">-- days, -- hours, -- minutes, -- seconds</span>
+        ) : ended ? (
           <span>0 days, 0 hours, 0 minutes, 0 seconds</span>
         ) : (
           <span className="tabular-nums">
